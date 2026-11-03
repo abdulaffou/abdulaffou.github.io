@@ -22,8 +22,10 @@ const legend = [['company', 'Company'], ['work', 'Project'], ['skill', 'Tool'], 
     >
       <g aria-hidden="true">
         {['e', 'e-hi'].map((base) => graph.edges.map((e) => {
-          const a = byId.get(e.from)![layout];
-          const b = byId.get(e.to)![layout];
+          // Draw from the end nearer the hub, so highlights always ripple outward.
+          const outward = rings.get(e.from)! <= rings.get(e.to)!;
+          const a = byId.get(outward ? e.from : e.to)![layout];
+          const b = byId.get(outward ? e.to : e.from)![layout];
           const d = Math.max(rings.get(e.from)!, rings.get(e.to)!) - 1;
           return (
             <line

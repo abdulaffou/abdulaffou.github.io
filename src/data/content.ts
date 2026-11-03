@@ -43,7 +43,7 @@ const bookCall: Link = {
 
 export const LENS_COPY: Record<Lens, LensCopy> = {
   default: {
-    lede: site.description,
+    lede: 'Data scientist and graph engineer, 5+ years. I build graph engines, data platforms and AI agents for logistics, cybersecurity and enterprise data, from the business problem all the way to working software.',
     primary: { label: 'See the work', href: '#work' },
     secondary: { label: 'Get in touch', href: '#contact' },
   },

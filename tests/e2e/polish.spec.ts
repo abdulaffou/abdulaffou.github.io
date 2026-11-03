@@ -37,3 +37,23 @@ test('amber is kept for actions and selections, not results or index letters', a
   }
   expect(await page.locator('.btn-primary').first().evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(AMBER);
 });
+
+test('the default intro says what Abdul is', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('[data-lens-copy="default"] .lede')).toContainText('Data scientist and graph engineer');
+});
+
+test('every edge starts at the end nearer the hub, so highlights ripple outward', async ({ page }) => {
+  await page.goto('/');
+  const bad = await page.locator(`${desk} .e-hi`).evaluateAll((lines) => {
+    const ring = (el: Element) => Number((el as HTMLElement).style.getPropertyValue('--d'));
+    const nodeAt = (x: number, y: number) =>
+      [...document.querySelectorAll(`[data-graph][data-layout="desktop"] [data-node] .core`)].find(
+        (c) => Number(c.getAttribute('cx')) === x && Number(c.getAttribute('cy')) === y,
+      )!.parentElement!;
+    return lines
+      .filter((l) => ring(nodeAt(+l.getAttribute('x1')!, +l.getAttribute('y1')!)) > ring(nodeAt(+l.getAttribute('x2')!, +l.getAttribute('y2')!)))
+      .map((l) => `${(l as SVGElement).dataset.from}>${(l as SVGElement).dataset.to}`);
+  });
+  expect(bad).toEqual([]);
+});
