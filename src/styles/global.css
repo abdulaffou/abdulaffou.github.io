@@ -337,6 +337,9 @@ html.intro .intro-rise { animation: rise 520ms var(--ease) backwards; animation-
 html.intro .graph-svg .e { animation: draw 420ms var(--ease) backwards; animation-delay: calc(200ms + var(--d, 0) * 110ms); }
 html.intro .graph-svg .n { transform-box: fill-box; transform-origin: center; animation: pop 380ms var(--ease) backwards; animation-delay: calc(200ms + var(--d, 0) * 110ms); }
 html.intro .graph-after { animation: fade 400ms var(--ease) backwards; animation-delay: 900ms; }
+/* Default view only: one amber pass out from the hub, then back to grey. Ends well inside 5s (WCAG 2.2.2). */
+@keyframes sweep { 0% { stroke-dashoffset: 1; opacity: 1; } 40%, 70% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+html.intro:not([data-lens]) .graph-svg .e-hi { animation: sweep 1800ms var(--ease); animation-delay: calc(1000ms + var(--d, 0) * 120ms); }
 
 
 @media (prefers-reduced-motion: reduce) {

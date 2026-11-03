@@ -62,6 +62,28 @@ test('amber is kept for actions and selections, not results or index letters', a
   expect(await page.locator('.btn-primary').first().evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(AMBER);
 });
 
+test.describe('first-visit sweep', () => {
+  test.use({ reducedMotion: 'no-preference' });
+  const hi = `${desk} .e-hi`;
+  const running = (page: Page) =>
+    page.locator(hi).evaluateAll((els) => els.filter((el) => el.getAnimations().some((a) => a.playState === 'running')).length);
+
+  test('the default view lights every edge once, then settles back to grey within 5 seconds', async ({ page }) => {
+    await page.goto('/');
+    await expect.poll(() => running(page), { timeout: 2500 }).toBeGreaterThan(10);
+    await page.waitForTimeout(5000);
+    expect(await running(page)).toBe(0);
+    const offsets = await page.locator(hi).evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).strokeDashoffset)));
+    expect(offsets.every((o) => o === 1)).toBe(true);
+  });
+
+  test('a visitor who arrives with a role sees no sweep', async ({ page }) => {
+    await page.goto('/?for=hiring');
+    await page.waitForTimeout(1500);
+    expect(await running(page)).toBe(0);
+  });
+});
+
 test('the default intro says what Abdul is', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('[data-lens-copy="default"] .lede')).toContainText('Data scientist and graph engineer');
