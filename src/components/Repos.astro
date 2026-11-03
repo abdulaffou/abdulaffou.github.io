@@ -1,0 +1,19 @@
+---
+import StartBadge from './StartBadge.astro';
+import { repos, reposIntro } from '../data/content';
+---
+<section id="code" data-section>
+  <h2>Fork these<StartBadge section="code" /></h2>
+  <p class="sec-intro">{reposIntro}</p>
+  <div class="repos">
+    {repos.map((r) => (
+      <article class="repo">
+        <h3>{r.name}</h3>
+        <p class="stack">{r.stack}</p>
+        {r.paragraphs.map((t) => <p>{t}</p>)}
+        {r.result && <p class="result">{r.result}</p>}
+        <div class="ctas"><a class="btn btn-ghost" href={r.url} rel="noopener">View {r.name} on GitHub</a></div>
+      </article>
+    ))}
+  </div>
+</section>

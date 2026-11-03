@@ -1,0 +1,13 @@
+---
+import { about, photos } from '../data/content';
+---
+<section id="about" data-section>
+  <h2>About</h2>
+  <div class:list={['about', { 'no-photo': !photos.portrait }]}>
+    {photos.portrait && <img class="photo photo-portrait" src={photos.portrait.src} alt={photos.portrait.alt} loading="lazy" decoding="async" />}
+    <div class="about-text">
+      {about.map((t) => <p>{t}</p>)}
+      {photos.meetup && <img class="photo photo-meetup" src={photos.meetup.src} alt={photos.meetup.alt} loading="lazy" decoding="async" />}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,76 @@
+---
+import { LAYOUTS, NODE_RADIUS, graph, labelPlacement, linesFor, fontFor, ringsFrom } from '../data/graph';
+import type { LayoutName } from '../data/graph';
+
+const rings = ringsFrom();
+const byId = new Map(graph.nodes.map((n) => [n.id, n]));
+const kindName = { company: 'company', work: 'project', domain: 'industry', skill: 'tool', oss: 'open-source project' };
+const targetText = (t?: string) =>
+  !t ? '' : t.startsWith('project:') ? ' Open the project.' : t.startsWith('job:') ? ' Go to experience.' : ' Show details.';
+const layouts: LayoutName[] = ['desktop', 'phone'];
+---
+<figure class="graph-box">
+  {layouts.map((layout) => (
+    <svg
+      class="graph-svg"
+      data-graph
+      data-layout={layout}
+      viewBox={`0 0 ${LAYOUTS[layout].width} ${LAYOUTS[layout].height}`}
+      role="group"
+      aria-label="Graph of Abdul's companies, projects, tools and industries"
+    >
+      <g aria-hidden="true">
+        {graph.edges.map((e) => {
+          const a = byId.get(e.from)![layout];
+          const b = byId.get(e.to)![layout];
+          const d = Math.max(rings.get(e.from)!, rings.get(e.to)!) - 1;
+          return (
+            <line
+              class={['e', ...e.classes.map((c) => `e-${c}`)].join(' ')}
+              data-from={e.from}
+              data-to={e.to}
+              x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+              pathLength="1"
+              style={`--d:${d}`}
+            />
+          );
+        })}
+      </g>
+      {graph.nodes.map((n) => {
+        const p = n[layout];
+        const r = NODE_RADIUS[n.kind];
+        const lp = labelPlacement(n, layout);
+        const fs = fontFor(n, layout);
+        return (
+          <g
+            class={`n n-${n.kind}`}
+            data-node={n.id}
+            data-target={n.target}
+            tabindex="0"
+            role={n.target ? 'link' : 'img'}
+            aria-label={`${n.label}, ${kindName[n.kind]}.${targetText(n.target)}`}
+            style={`--d:${rings.get(n.id)}`}
+          >
+            <circle class="halo" cx={p.x} cy={p.y} r={r + 6} />
+            <circle cx={p.x} cy={p.y} r={r} />
+            <text x={lp.x} y={lp.y} style={`text-anchor:${lp.anchor};font-size:${fs}px`}>
+              {linesFor(n, layout).map((line, i) => <tspan x={lp.x} dy={i ? fs * 1.2 : 0}>{line}</tspan>)}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  ))}
+  <figcaption class="graph-caption graph-after">
+    Every line is a real connection between a company, a problem and the tool that solved it. Tell me who you are to trace your path through it.
+  </figcaption>
+  <ul class="legend graph-after" aria-hidden="true">
+    <li><i class="dot dot-co"></i>Company</li>
+    <li><i class="dot"></i>Project</li>
+    <li><i class="dot dot-tool"></i>Tool</li>
+    <li><i class="dot dot-ind"></i>Industry</li>
+  </ul>
+  <ul class="sr-only">
+    {graph.edges.map((e) => <li>{byId.get(e.from)!.label} connects to {byId.get(e.to)!.label}</li>)}
+  </ul>
+</figure>

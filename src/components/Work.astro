@@ -1,0 +1,41 @@
+---
+import StartBadge from './StartBadge.astro';
+import { projects, workAside, workIntro } from '../data/content';
+---
+<section id="work" data-section>
+  <div class="sec-top">
+    <div>
+      <h2>Selected work<StartBadge section="work" /></h2>
+      <p class="sec-intro">{workIntro}</p>
+    </div>
+    <button class="linkbtn" type="button" data-expand-all>Expand all</button>
+  </div>
+  {projects.map((p, i) => (
+    <details class="case" id={`project-${p.id}`} data-project open={i === 0}>
+      <summary class="case-head">
+        <h3><span class="case-title">{p.title}</span><span class="case-meta">{p.client}</span></h3>
+        <span class="case-res">{p.headline}</span>
+        <svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5l5 5 5-5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </summary>
+      <div class="case-body">
+        <div class="dwg">
+          <div class="art">
+            <div class="chain" role="img" aria-label={p.chainLabel}>
+              {p.chain.map((c) => <span class:list={['step', { hot: c.hot, 'hot-edge': c.hotEdge }]}><span class="nd">{c.label}</span></span>)}
+            </div>
+            <p class="story">{p.story}</p>
+          </div>
+          <table class="tb">
+            <tbody>
+              <tr><th scope="row">Client</th><td>{p.client}</td></tr>
+              <tr><th scope="row">Stack</th><td>{p.stack}</td></tr>
+              <tr><th scope="row">Role</th><td>{p.role}</td></tr>
+              <tr><th scope="row">Result</th><td class="res">{p.result}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  ))}
+  <p class="aside" id="novigo-optimisation">{workAside}</p>
+</section>

@@ -1,0 +1,11 @@
+---
+import { START_HERE } from '../data/content';
+import type { SectionId } from '../data/types';
+
+interface Props { section: SectionId }
+const { section } = Astro.props;
+const badges = Object.entries(START_HERE).flatMap(([lens, list]) =>
+  list.filter((b) => b.section === section).map((b) => ({ lens, text: b.text })),
+);
+---
+{badges.map((b) => <span class="start" data-start={b.lens}>{b.text}</span>)}

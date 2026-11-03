@@ -1,0 +1,12 @@
+---
+import { contact, photos } from '../data/content';
+---
+<section id="contact" class="contact" data-section>
+  <div class="contact-row">
+    {photos.portrait && <img class="avatar" src={photos.portrait.src} alt="" loading="lazy" decoding="async" />}
+    <h2>{contact.heading}</h2>
+  </div>
+  <div class="ctas">
+    {contact.links.map((l, i) => <a class:list={['btn', i === 0 ? 'btn-primary' : 'btn-ghost']} href={l.href} rel={l.href.startsWith('http') ? 'noopener' : undefined}>{l.label}</a>)}
+  </div>
+</section>

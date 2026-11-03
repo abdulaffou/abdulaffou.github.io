@@ -1,0 +1,27 @@
+---
+import { skills, skillsIntro } from '../data/content';
+---
+<section id="skills" data-section>
+  <h2>Index of skills</h2>
+  <p class="sec-intro">{skillsIntro}</p>
+  <div class="index">
+    {skills.map((g) => (
+      <div class="index-col">
+        <h3 class="letter">{g.letters}</h3>
+        {g.items.map((item) => (
+          <p>
+            <span class="term">{item.term}</span>{' '}
+            <span class="refs">
+              {item.refs.map((r, i) => (
+                <Fragment>
+                  {i > 0 && ', '}
+                  {r.projectId ? <a href={`#project-${r.projectId}`} data-open-project={r.projectId}>{r.label}</a> : r.label}
+                </Fragment>
+              ))}
+            </span>
+          </p>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>

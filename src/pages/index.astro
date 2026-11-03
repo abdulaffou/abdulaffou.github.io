@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Work from '../components/Work.astro';
+import Method from '../components/Method.astro';
+import Experience from '../components/Experience.astro';
+import SkillsIndex from '../components/SkillsIndex.astro';
+import Repos from '../components/Repos.astro';
+import Trust from '../components/Trust.astro';
+import About from '../components/About.astro';
+import Credentials from '../components/Credentials.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import { SECTION_ORDER, site } from '../data/content';
+
+// Visual order per lens paints before any script runs; lens.ts also moves the DOM so focus order matches.
+const orderCss = Object.entries(SECTION_ORDER)
+  .flatMap(([lens, ids]) =>
+    ids.map((id, i) => (lens === 'default' ? `#sections>#${id}{order:${i}}` : `html[data-lens="${lens}"] #sections>#${id}{order:${i}}`)),
+  )
+  .join('');
+---
+<Base title={site.title} description={site.description}>
+  <style slot="head" set:html={orderCss} is:inline></style>
+  <a class="skip-link" href="#sections">Skip to content</a>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <div class="wrap">
+      <div id="sections" data-order={JSON.stringify(SECTION_ORDER)}>
+        <Work />
+        <Method />
+        <Experience />
+        <SkillsIndex />
+        <Repos />
+        <Trust />
+        <About />
+        <Credentials />
+        <Contact />
+      </div>
+    </div>
+  </main>
+  <Footer />
+  <script>
+    import '../scripts/lens.ts';
+    import '../scripts/graph.ts';
+    import '../scripts/collapse.ts';
+    import '../scripts/method.ts';
+  </script>
+</Base>

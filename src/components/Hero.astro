@@ -1,0 +1,33 @@
+---
+import Graph from './Graph.astro';
+import { LENSES, LENS_COPY, site } from '../data/content';
+import type { Lens } from '../data/types';
+
+const lenses: Lens[] = ['default', 'hiring', 'clients', 'engineers'];
+const isExternal = (href: string) => href.startsWith('http');
+---
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="switch-wrap intro-rise" style="--i:0">
+        <p class="switch-label" id="switch-label">{site.switchLabel}</p>
+        <div class="switch" role="group" aria-labelledby="switch-label" data-lens-switch>
+          {LENSES.map((l) => <button class="tab" type="button" data-lens={l.id} aria-pressed="false">{l.label}</button>)}
+        </div>
+      </div>
+      <h1 class="intro-rise" style="--i:1">{site.headline}</h1>
+      <div class="intro-rise" style="--i:2">
+        {lenses.map((lens) => (
+          <div data-lens-copy={lens}>
+            <p class="lede">{LENS_COPY[lens].lede}</p>
+            <div class="ctas">
+              <a class="btn btn-primary" href={LENS_COPY[lens].primary.href} rel={isExternal(LENS_COPY[lens].primary.href) ? 'noopener' : undefined}>{LENS_COPY[lens].primary.label}</a>
+              <a class="btn btn-ghost" href={LENS_COPY[lens].secondary.href} rel={isExternal(LENS_COPY[lens].secondary.href) ? 'noopener' : undefined}>{LENS_COPY[lens].secondary.label}</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <Graph />
+  </div>
+</div>

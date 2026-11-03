@@ -1,0 +1,18 @@
+---
+import StartBadge from './StartBadge.astro';
+import { experienceIntro, jobs } from '../data/content';
+---
+<section id="experience" data-section>
+  <h2>Experience<StartBadge section="experience" /></h2>
+  <p class="sec-intro">{experienceIntro}</p>
+  {jobs.map((j) => (
+    <div class="job" id={`job-${j.id}`}>
+      <div class="yr">{j.years}</div>
+      <div>
+        <h3>{j.company}</h3>
+        <p class="role">{j.role}</p>
+        <p class="d">{j.description}</p>
+      </div>
+    </div>
+  ))}
+</section>

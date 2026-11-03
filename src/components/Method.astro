@@ -1,0 +1,21 @@
+---
+import { methodIntro, methodSteps } from '../data/content';
+---
+<section id="method" data-section>
+  <h2>How I work</h2>
+  <p class="sec-intro">{methodIntro}</p>
+  <ul class="method" aria-label="Working method">
+    {methodSteps.map((s, i) => (
+      <li>
+        <button class="mstep" type="button" data-method-step={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`method-panel-${i}`}>{s.name}</button>
+      </li>
+    ))}
+  </ul>
+  {methodSteps.map((s, i) => (
+    <div class:list={['mpanel', { 'is-active': i === 0 }]} id={`method-panel-${i}`} data-method-panel={i} aria-live="polite">
+      <h3>{s.heading}</h3>
+      <p>{s.principle}</p>
+      <p class="eg">{s.example}</p>
+    </div>
+  ))}
+</section>

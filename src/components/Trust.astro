@@ -1,0 +1,8 @@
+---
+import StartBadge from './StartBadge.astro';
+import { trust } from '../data/content';
+---
+<section id="trust" data-section>
+  <h2>On your data<StartBadge section="trust" /></h2>
+  <div class="letterbody">{trust.map((t) => <p>{t}</p>)}</div>
+</section>
