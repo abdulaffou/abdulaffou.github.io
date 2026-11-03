@@ -158,3 +158,11 @@ describe('graph', () => {
     expect(ringsFrom().size).toBe(graph.nodes.length);
   });
 });
+
+describe('copy', () => {
+  it('says "Tell me" only in the headline', async () => {
+    const { readFileSync } = await import('node:fs');
+    const sources = ['src/data/content.ts', 'src/components/Graph.astro'].map((f) => readFileSync(f, 'utf8')).join('\n');
+    expect(sources.match(/tell me/gi)?.length).toBe(1);
+  });
+});

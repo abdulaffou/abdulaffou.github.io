@@ -27,7 +27,7 @@ export const site = {
   description:
     'Graph engines, data platforms and AI agents for logistics, cybersecurity and enterprise data. Five years of taking a business problem all the way to working software.',
   headline: "Tell me what you're trying to do. I'll build it.",
-  switchLabel: 'First, tell me who you are.',
+  switchLabel: 'First, which one are you?',
 };
 
 export const LENSES: { id: ActiveLens; label: string }[] = [
