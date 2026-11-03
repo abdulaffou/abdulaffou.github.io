@@ -95,7 +95,7 @@ html[data-lens="engineers"] [data-lens-copy="engineers"] {
   .graph-svg[data-layout="phone"] { display: block; }
 }
 .e, .e-hi { stroke-dasharray: 1; fill: none; }
-/* Edges retract into, and grow out of, their source node; --d ripples the change outward from the hub. */
+/* Grey edges always stay; a role grows amber copies out of each edge's source node, rippling from the hub (--d). */
 .e {
   stroke: var(--edge); stroke-width: 1.5; stroke-dashoffset: 0;
   transition: stroke-dashoffset 460ms var(--ease) calc(var(--d, 0) * 40ms), opacity var(--dur) var(--ease), stroke var(--dur) var(--ease);
@@ -121,9 +121,6 @@ html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) circle { opacity: 0.3; 
 html[data-lens="hiring"] .n:not(.n-company) text,
 html[data-lens="clients"] .n:not(.n-domain):not(.n-work) text,
 html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) text { fill: var(--muted); }
-html[data-lens="hiring"] .e:not(.e-company),
-html[data-lens="clients"] .e:not(.e-work),
-html[data-lens="engineers"] .e:not(.e-oss) { stroke-dashoffset: 1; }
 html[data-lens="hiring"] .n-company circle,
 html[data-lens="clients"] :is(.n-domain, .n-work) circle,
 html[data-lens="engineers"] :is(.n-skill, .n-oss) circle { fill: var(--accent); stroke: var(--accent); }
@@ -139,7 +136,6 @@ html[data-lens="engineers"] .e-hi.e-oss {
 .graph-svg.has-focus .n:not(.is-near) text { fill: var(--muted); }
 .graph-svg.has-focus .e:not(.is-near) { opacity: 0.15; }
 .graph-svg.has-focus .e-hi:not(.is-near) { opacity: 0.2; }
-.graph-svg.has-focus .e.is-near { stroke-dashoffset: 0; transition-delay: 0s; }
 .graph-svg.has-focus .n.is-near circle { opacity: 1; }
 .graph-svg.has-focus .n.is-near text { fill: var(--text2); }
 .graph-svg.has-focus .e.is-near { opacity: 1; stroke: var(--accent); stroke-width: 2.5; }

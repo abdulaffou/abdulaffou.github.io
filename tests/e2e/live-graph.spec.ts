@@ -29,13 +29,14 @@ for (const width of [1440, 390]) {
 test.describe('edges', () => {
   test.use({ reducedMotion: 'reduce' });
 
-  test('a role retracts unrelated edges and draws its own in amber', async ({ page }) => {
+  test('a role keeps every grey edge and draws its own in amber on top', async ({ page }) => {
     await page.goto('/');
     expect(await dashOffset(page, `${desk} line.e[data-from="attack-paths"][data-to="cyber"]`)).toBe(0);
     expect(await dashOffset(page, `${desk} line.e-hi[data-from="novigo"][data-to="hos"]`)).toBe(1);
 
     await page.getByRole('button', { name: "I'm hiring" }).click();
-    expect(await dashOffset(page, `${desk} line.e[data-from="attack-paths"][data-to="cyber"]`)).toBe(1);
+    expect(await dashOffset(page, `${desk} line.e[data-from="attack-paths"][data-to="cyber"]`)).toBe(0);
+    expect(await page.locator(`${desk} line.e[data-from="attack-paths"][data-to="cyber"]`).evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
     expect(await dashOffset(page, `${desk} line.e-hi[data-from="novigo"][data-to="hos"]`)).toBe(0);
     const stroke = await page.locator(`${desk} line.e-hi[data-from="novigo"][data-to="hos"]`).evaluate((el) => getComputedStyle(el).stroke);
     expect(stroke).toBe('rgb(242, 165, 65)');
@@ -45,7 +46,7 @@ test.describe('edges', () => {
     expect(await dashOffset(page, `${desk} line.e-hi[data-from="novigo"][data-to="hos"]`)).toBe(1);
   });
 
-  test('hovering brings back a retracted edge for its node', async ({ page }) => {
+  test('hovering a node keeps its grey edges drawn under a role', async ({ page }) => {
     await page.goto('/?for=hiring');
     await page.locator(`${desk} [data-node="cyber"]`).hover();
     expect(await dashOffset(page, `${desk} line.e[data-from="attack-paths"][data-to="cyber"]`)).toBe(0);
