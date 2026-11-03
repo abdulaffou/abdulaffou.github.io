@@ -58,7 +58,7 @@ export const LENS_COPY: Record<Lens, LensCopy> = {
     secondary: { label: 'How I handle your data', href: '#trust' },
   },
   engineers: {
-    lede: 'TigerGraph, Neo4j, Python, FastAPI and Microsoft Fabric. Two side projects you can fork today, each with a real test suite and a real result.',
+    lede: 'TigerGraph, Neo4j, Python, FastAPI and Microsoft Fabric. Two side projects you can fork today, both built for real use with real results.',
     primary: { label: 'Browse the repos', href: '#code' },
     secondary: { label: 'github.com/abdulaffou', href: person.github },
   },
