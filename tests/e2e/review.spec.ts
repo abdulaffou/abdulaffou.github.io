@@ -24,7 +24,7 @@ test.describe('with reduced motion', () => {
     await page.goto('/?for=hiring');
     const label = page.locator(`${desk} [data-node="hos"] text`);
     expect(await effectiveOpacity(label)).toBe(1);
-    expect(await label.evaluate((el) => getComputedStyle(el).fill)).toBe('rgb(147, 163, 189)');
+    expect(await label.evaluate((el) => getComputedStyle(el).fill)).toBe('rgb(162, 157, 148)');
     expect(await effectiveOpacity(page.locator(`${desk} [data-node="hos"] circle:not(.halo)`))).toBeLessThan(0.5);
   });
 
