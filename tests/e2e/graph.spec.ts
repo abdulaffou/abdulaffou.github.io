@@ -68,3 +68,12 @@ test.describe('phone', () => {
     }
   });
 });
+
+test('Back after a graph jump returns to the graph', async ({ page }) => {
+  await page.goto('/');
+  await page.locator(node('control-tower')).click();
+  await expect(page.locator('#project-control-tower summary')).toBeInViewport();
+  await page.goBack();
+  await expect(page.locator(desk)).toBeInViewport({ ratio: 0.5 });
+  expect(new URL(page.url()).pathname).toBe('/');
+});

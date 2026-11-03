@@ -14,6 +14,8 @@ export function goToTarget(target: string): void {
           ? document.getElementById(id)
           : document.getElementById('novigo-optimisation');
   if (!el) return;
+  // A history entry per jump, so the browser's Back returns to the graph.
+  history.pushState(history.state, '', `#${el.id}`);
   if (el instanceof HTMLDetailsElement) openProject(el);
   el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
   const focusable = el instanceof HTMLDetailsElement ? el.querySelector('summary') : el;

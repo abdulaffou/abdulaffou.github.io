@@ -151,7 +151,7 @@ html[data-lens="engineers"] .e-hi.e-oss {
 
 /* ---------- Sections ---------- */
 #sections { display: flex; flex-direction: column; }
-#sections > section { padding: 88px 0; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+#sections > section { padding: 88px 0; border-top: 1px solid var(--line); scroll-margin-top: calc(16px + var(--stick)); }
 h2 { font-stretch: 112%; font-weight: 750; font-size: clamp(30px, 3.2vw, 36px); letter-spacing: -0.02em; margin: 0 0 12px; }
 .sec-intro { color: var(--text3); font-size: 17px; line-height: 1.55; max-width: 42em; margin: 0 0 48px; }
 .sec-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; margin: 0 0 32px; }
@@ -172,7 +172,7 @@ html[data-lens="engineers"] .start[data-start="engineers"] { display: inline-blo
 }
 html.js .linkbtn { display: inline-flex; align-items: center; }
 .linkbtn:hover { border-color: var(--accent); }
-.case { border: 1px solid var(--line2); border-radius: var(--radius-card); margin: 0 0 12px; overflow: hidden; background: var(--bg); scroll-margin-top: 16px; }
+.case { border: 1px solid var(--line2); border-radius: var(--radius-card); margin: 0 0 12px; overflow: hidden; background: var(--bg); scroll-margin-top: calc(16px + var(--stick)); }
 .case > summary { list-style: none; cursor: pointer; }
 .case > summary::-webkit-details-marker { display: none; }
 .case-head { display: grid; grid-template-columns: minmax(0, 1fr) auto 28px; align-items: center; gap: 24px; padding: 22px 28px; min-height: 44px; transition: background var(--dur-fast) var(--ease); }
@@ -199,7 +199,7 @@ html.js .linkbtn { display: inline-flex; align-items: center; }
 .tb tr:last-child th, .tb tr:last-child td { border-bottom: 0; }
 .tb th { width: 84px; font-weight: 500; color: var(--muted); }
 .tb .res { color: var(--text); font-weight: 600; }
-.aside { font-size: 16px; color: var(--text3); margin: 24px 0 0; scroll-margin-top: 16px; }
+.aside { font-size: 16px; color: var(--text3); margin: 24px 0 0; scroll-margin-top: calc(16px + var(--stick)); }
 
 /* ---------- Method ---------- */
 .method { display: flex; flex-wrap: wrap; align-items: center; row-gap: 12px; margin: 0 0 28px; padding: 0; list-style: none; }
@@ -275,9 +275,18 @@ html.js .mpanel:not(.is-active) { display: none; }
 /* ---------- Phone ---------- */
 @media (max-width: 760px) {
   .hero { padding: 16px 0 72px; gap: 40px; }
-  .switch { width: 100%; }
-  .tab { flex: 1 1 auto; }
-  .nav-links { gap: 0 18px; font-size: 14px; }
+  .switch { width: 100%; flex-direction: column; }
+  .tab { text-align: left; }
+  /* One sticky row: name, then links that scroll sideways under a fade. */
+  body > header { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .nav { flex-wrap: nowrap; padding: 6px 0; gap: 16px; }
+  .nav-name { font-size: 16px; flex: none; }
+  .nav-links {
+    flex-wrap: nowrap; gap: 0 18px; font-size: 14px; overflow-x: auto; scrollbar-width: none; padding-right: 24px;
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { white-space: nowrap; }
   #sections > section { padding: 64px 0; }
   .about { grid-template-columns: 1fr; }
   .job { grid-template-columns: 1fr; gap: 6px; }
@@ -288,10 +297,14 @@ html.js .mpanel:not(.is-active) { display: none; }
   .case-res { grid-column: 1; grid-row: 2; text-align: left; }
   .chev { grid-column: 2; grid-row: 1; }
   .case-title { font-size: 19px; }
-  .method li + li::before { width: 16px; }
+  /* Stacked, with vertical connectors: sideways ones dangle wherever a row wraps. */
+  .method, .chain { flex-direction: column; align-items: flex-start; }
+  .method li, .chain .step { flex-direction: column; align-items: flex-start; }
+  .method li + li::before { width: 2px; height: 14px; margin-left: 28px; }
   .mstep { font-size: 17px; padding: 12px 18px; }
   .repo { padding: 24px; }
-  .chain .step + .step::before { width: 18px; }
+  .chain .step + .step::before { width: 1.5px; height: 12px; margin-left: 22px; }
+  .chain .step.hot-edge::before { width: 2px; height: 12px; }
 }
 
 /* ---------- Intro (first load only, set in <head>; CSS-only so content can never get stuck hidden) ---------- */
