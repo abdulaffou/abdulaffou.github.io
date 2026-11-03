@@ -71,12 +71,20 @@ html.js .switch-wrap { display: block; }
 h1 { font-stretch: 125%; font-weight: 800; font-size: clamp(42px, 5.4vw, 78px); line-height: 0.98; letter-spacing: -0.03em; margin: 36px 0 28px; text-wrap: balance; }
 .lede { font-size: 19px; line-height: 1.55; color: var(--text2); max-width: 34em; margin: 0 0 32px; }
 
-[data-lens-copy] { display: none; }
+/* Every intro copy sits in the same cell; the tallest sets the height, so switching never moves the layout. */
+.lens-copies { display: grid; }
+[data-lens-copy] {
+  grid-area: 1 / 1; opacity: 0; visibility: hidden; transform: translateY(6px);
+  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), visibility 0s linear var(--dur-fast);
+}
 html:not([data-lens]) [data-lens-copy="default"],
 html[data-lens="default"] [data-lens-copy="default"],
 html[data-lens="hiring"] [data-lens-copy="hiring"],
 html[data-lens="clients"] [data-lens-copy="clients"],
-html[data-lens="engineers"] [data-lens-copy="engineers"] { display: block; }
+html[data-lens="engineers"] [data-lens-copy="engineers"] {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity var(--dur-slow) var(--ease) 80ms, transform var(--dur-slow) var(--ease) 80ms, visibility 0s;
+}
 
 /* ---------- Graph ---------- */
 .graph-box { margin: 0; min-width: 0; }
@@ -86,7 +94,16 @@ html[data-lens="engineers"] [data-lens-copy="engineers"] { display: block; }
   .graph-svg[data-layout="desktop"] { display: none; }
   .graph-svg[data-layout="phone"] { display: block; }
 }
-.e { stroke: var(--edge); stroke-width: 1.5; transition: stroke var(--dur) var(--ease), opacity var(--dur) var(--ease), stroke-width var(--dur) var(--ease); }
+.e, .e-hi { stroke-dasharray: 1; fill: none; }
+/* Edges retract into, and grow out of, their source node; --d ripples the change outward from the hub. */
+.e {
+  stroke: var(--edge); stroke-width: 1.5; stroke-dashoffset: 0;
+  transition: stroke-dashoffset 460ms var(--ease) calc(var(--d, 0) * 40ms), opacity var(--dur) var(--ease), stroke var(--dur) var(--ease);
+}
+.e-hi {
+  stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-dashoffset: 1; pointer-events: none;
+  transition: stroke-dashoffset 380ms var(--ease) calc(var(--d, 0) * 30ms);
+}
 .n { cursor: pointer; outline: none; }
 .n circle { fill: var(--surface2); stroke: var(--node); stroke-width: 1.5; transition: fill var(--dur) var(--ease), stroke var(--dur) var(--ease), opacity var(--dur) var(--ease); }
 .n text { fill: var(--text2); font-family: var(--font-sans); font-size: 13px; font-weight: 500; text-anchor: middle; transition: fill var(--dur) var(--ease); }
@@ -106,18 +123,23 @@ html[data-lens="clients"] .n:not(.n-domain):not(.n-work) text,
 html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) text { fill: var(--muted); }
 html[data-lens="hiring"] .e:not(.e-company),
 html[data-lens="clients"] .e:not(.e-work),
-html[data-lens="engineers"] .e:not(.e-oss) { opacity: 0.22; }
+html[data-lens="engineers"] .e:not(.e-oss) { stroke-dashoffset: 1; }
 html[data-lens="hiring"] .n-company circle,
 html[data-lens="clients"] :is(.n-domain, .n-work) circle,
 html[data-lens="engineers"] :is(.n-skill, .n-oss) circle { fill: var(--accent); stroke: var(--accent); }
-html[data-lens="hiring"] .e-company,
-html[data-lens="clients"] .e-work,
-html[data-lens="engineers"] .e-oss { stroke: var(--accent); stroke-width: 2.5; }
+html[data-lens="hiring"] .e-hi.e-company,
+html[data-lens="clients"] .e-hi.e-work,
+html[data-lens="engineers"] .e-hi.e-oss {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 620ms var(--ease) calc(120ms + var(--d, 0) * 70ms);
+}
 
 /* hover / focus neighbourhood (set by graph.ts, wins over lens) */
 .graph-svg.has-focus .n:not(.is-near) circle { opacity: 0.25; }
 .graph-svg.has-focus .n:not(.is-near) text { fill: var(--muted); }
 .graph-svg.has-focus .e:not(.is-near) { opacity: 0.15; }
+.graph-svg.has-focus .e-hi:not(.is-near) { opacity: 0.2; }
+.graph-svg.has-focus .e.is-near { stroke-dashoffset: 0; transition-delay: 0s; }
 .graph-svg.has-focus .n.is-near circle { opacity: 1; }
 .graph-svg.has-focus .n.is-near text { fill: var(--text2); }
 .graph-svg.has-focus .e.is-near { opacity: 1; stroke: var(--accent); stroke-width: 2.5; }
@@ -284,12 +306,10 @@ html.js .mpanel:not(.is-active) { display: none; }
 @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
 
 html.intro .intro-rise { animation: rise 520ms var(--ease) backwards; animation-delay: calc(var(--i, 0) * 70ms); }
-html.intro .graph-svg .e { stroke-dasharray: 1; animation: draw 420ms var(--ease) backwards; animation-delay: calc(200ms + var(--d, 0) * 110ms); }
+html.intro .graph-svg .e { animation: draw 420ms var(--ease) backwards; animation-delay: calc(200ms + var(--d, 0) * 110ms); }
 html.intro .graph-svg .n { transform-box: fill-box; transform-origin: center; animation: pop 380ms var(--ease) backwards; animation-delay: calc(200ms + var(--d, 0) * 110ms); }
 html.intro .graph-after { animation: fade 400ms var(--ease) backwards; animation-delay: 900ms; }
 
-/* lens change cross-fade (View Transitions) */
-::view-transition-old(root), ::view-transition-new(root) { animation-duration: 260ms; animation-timing-function: var(--ease); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }

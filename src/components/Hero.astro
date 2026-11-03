@@ -16,7 +16,7 @@ const isExternal = (href: string) => href.startsWith('http');
         </div>
       </div>
       <h1 class="intro-rise" style="--i:1">{site.headline}</h1>
-      <div class="intro-rise" style="--i:2">
+      <div class="intro-rise lens-copies" style="--i:2">
         {lenses.map((lens) => (
           <div data-lens-copy={lens}>
             <p class="lede">{LENS_COPY[lens].lede}</p>

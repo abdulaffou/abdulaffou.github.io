@@ -6,17 +6,14 @@ export function parseLens(value: string | null): Lens {
   return (ACTIVE as readonly string[]).includes(value ?? '') ? (value as Lens) : 'default';
 }
 
-// The lens the visitor asked for last. View Transitions apply changes a frame later,
-// so reading the page back would miss a second quick click.
+// The lens the visitor asked for last; the source of truth for the next toggle.
 let chosenLens: Lens = parseLens(document.documentElement.getAttribute('data-lens'));
 
 export function currentLens(): Lens {
   return chosenLens;
 }
 
-const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-export function applyLens(lens: Lens, opts: { updateUrl: boolean; animate: boolean }): void {
+export function applyLens(lens: Lens, opts: { updateUrl: boolean }): void {
   chosenLens = lens;
   const container = document.getElementById('sections');
   const orders = JSON.parse(container?.dataset.order ?? '{}') as Record<Lens, string[]>;
@@ -46,18 +43,17 @@ export function applyLens(lens: Lens, opts: { updateUrl: boolean; animate: boole
     document.dispatchEvent(new CustomEvent('lenschange', { detail: { lens } }));
   };
 
-  if (opts.animate && 'startViewTransition' in document && !reduceMotion()) document.startViewTransition(run);
-  else run();
+  run();
 }
 
 function init() {
-  applyLens(parseLens(new URLSearchParams(location.search).get('for')), { updateUrl: false, animate: false });
+  applyLens(parseLens(new URLSearchParams(location.search).get('for')), { updateUrl: false });
 
   document.querySelector('[data-lens-switch]')?.addEventListener('click', (event) => {
     const button = (event.target as Element).closest<HTMLButtonElement>('[data-lens]');
     if (!button) return;
     const chosen = parseLens(button.dataset.lens ?? null);
-    applyLens(chosen === currentLens() ? 'default' : chosen, { updateUrl: true, animate: true });
+    applyLens(chosen === currentLens() ? 'default' : chosen, { updateUrl: true });
   });
 }
 

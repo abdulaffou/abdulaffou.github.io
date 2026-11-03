@@ -20,13 +20,13 @@ const layouts: LayoutName[] = ['desktop', 'phone'];
       aria-label="Graph of Abdul's companies, projects, tools and industries"
     >
       <g aria-hidden="true">
-        {graph.edges.map((e) => {
+        {['e', 'e-hi'].map((base) => graph.edges.map((e) => {
           const a = byId.get(e.from)![layout];
           const b = byId.get(e.to)![layout];
           const d = Math.max(rings.get(e.from)!, rings.get(e.to)!) - 1;
           return (
             <line
-              class={['e', ...e.classes.map((c) => `e-${c}`)].join(' ')}
+              class={[base, ...e.classes.map((c) => `e-${c}`)].join(' ')}
               data-from={e.from}
               data-to={e.to}
               x1={a.x} y1={a.y} x2={b.x} y2={b.y}
@@ -34,7 +34,7 @@ const layouts: LayoutName[] = ['desktop', 'phone'];
               style={`--d:${d}`}
             />
           );
-        })}
+        }))}
       </g>
       {graph.nodes.map((n) => {
         const p = n[layout];
