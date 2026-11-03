@@ -8,6 +8,7 @@ const kindName = { company: 'company', work: 'project', domain: 'industry', skil
 const targetText = (t?: string) =>
   !t ? '' : t.startsWith('project:') ? ' Open the project.' : t.startsWith('job:') ? ' Go to experience.' : ' Show details.';
 const layouts: LayoutName[] = ['desktop', 'phone'];
+const legend = [['company', 'Company'], ['work', 'Project'], ['skill', 'Tool'], ['domain', 'Industry']] as const;
 ---
 <figure class="graph-box">
   {layouts.map((layout) => (
@@ -51,8 +52,8 @@ const layouts: LayoutName[] = ['desktop', 'phone'];
             aria-label={`${n.label}, ${kindName[n.kind]}.${targetText(n.target)}`}
             style={`--d:${rings.get(n.id)}`}
           >
-            <circle class="halo" cx={p.x} cy={p.y} r={r + 6} />
-            <circle cx={p.x} cy={p.y} r={r} />
+            <circle class="halo" cx={p.x} cy={p.y} r={r + (layout === 'phone' ? 12 : 6)} />
+            <circle class="core" cx={p.x} cy={p.y} r={r} />
             <text x={lp.x} y={lp.y} style={`text-anchor:${lp.anchor};font-size:${fs}px`}>
               {linesFor(n, layout).map((line, i) => <tspan x={lp.x} dy={i ? fs * 1.2 : 0}>{line}</tspan>)}
             </text>
@@ -65,10 +66,9 @@ const layouts: LayoutName[] = ['desktop', 'phone'];
     Every line is a real connection between a company, a problem and the tool that solved it. Tell me who you are to trace your path through it.
   </figcaption>
   <ul class="legend graph-after" aria-hidden="true">
-    <li><i class="dot dot-co"></i>Company</li>
-    <li><i class="dot"></i>Project</li>
-    <li><i class="dot dot-tool"></i>Tool</li>
-    <li><i class="dot dot-ind"></i>Industry</li>
+    {legend.map(([kind, label]) => (
+      <li><svg class={`key n-${kind}`} viewBox="0 0 16 16"><circle class="core" cx="8" cy="8" r="6" /></svg>{label}</li>
+    ))}
   </ul>
   <ul class="sr-only">
     {graph.edges.map((e) => <li>{byId.get(e.from)!.label} connects to {byId.get(e.to)!.label}</li>)}

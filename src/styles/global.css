@@ -105,25 +105,27 @@ html[data-lens="engineers"] [data-lens-copy="engineers"] {
   transition: stroke-dashoffset 380ms var(--ease) calc(var(--d, 0) * 30ms);
 }
 .n { cursor: pointer; outline: none; }
-.n circle { fill: var(--surface2); stroke: var(--node); stroke-width: 1.5; transition: fill var(--dur) var(--ease), stroke var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+/* One look per kind, shared by graph nodes and the legend: company solid ring, project hollow, tool filled, industry dashed. */
+.core { fill: var(--bg); stroke: var(--node); stroke-width: 1.5; transition: fill var(--dur) var(--ease), stroke var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+.n-company .core { fill: var(--surface2); stroke: var(--text2); stroke-width: 2; }
+.n-skill .core { fill: var(--line3); }
+.n-domain .core { stroke-dasharray: 3 2.5; }
 .n text { fill: var(--text2); font-family: var(--font-sans); font-size: 13px; font-weight: 500; text-anchor: middle; transition: fill var(--dur) var(--ease); }
-.n-company circle { stroke: var(--text2); stroke-width: 2; }
 .n-company text { font-weight: 700; font-size: 14px; fill: var(--text); }
-.n-skill circle { fill: var(--skillfill); }
 .n .halo { fill: transparent; stroke: none; }
 .n:focus-visible .halo { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 3 3; }
 
 /* lens highlight (paints before JS) */
 /* dim shapes, not labels: labels drop to --muted so they keep 4.5:1 contrast */
-html[data-lens="hiring"] .n:not(.n-company) circle,
-html[data-lens="clients"] .n:not(.n-domain):not(.n-work) circle,
-html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) circle { opacity: 0.3; }
+html[data-lens="hiring"] .n:not(.n-company) .core,
+html[data-lens="clients"] .n:not(.n-domain):not(.n-work) .core,
+html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) .core { opacity: 0.3; }
 html[data-lens="hiring"] .n:not(.n-company) text,
 html[data-lens="clients"] .n:not(.n-domain):not(.n-work) text,
 html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) text { fill: var(--muted); }
-html[data-lens="hiring"] .n-company circle,
-html[data-lens="clients"] :is(.n-domain, .n-work) circle,
-html[data-lens="engineers"] :is(.n-skill, .n-oss) circle { fill: var(--accent); stroke: var(--accent); }
+html[data-lens="hiring"] .n-company .core,
+html[data-lens="clients"] :is(.n-domain, .n-work) .core,
+html[data-lens="engineers"] :is(.n-skill, .n-oss) .core { fill: var(--accent); stroke: var(--accent); stroke-dasharray: none; }
 html[data-lens="hiring"] .e-hi.e-company,
 html[data-lens="clients"] .e-hi.e-work,
 html[data-lens="engineers"] .e-hi.e-oss {
@@ -132,23 +134,20 @@ html[data-lens="engineers"] .e-hi.e-oss {
 }
 
 /* hover / focus neighbourhood (set by graph.ts, wins over lens) */
-.graph-svg.has-focus .n:not(.is-near) circle { opacity: 0.25; }
+.graph-svg.has-focus .n:not(.is-near) .core { opacity: 0.25; }
 .graph-svg.has-focus .n:not(.is-near) text { fill: var(--muted); }
 .graph-svg.has-focus .e:not(.is-near) { opacity: 0.15; }
 .graph-svg.has-focus .e-hi:not(.is-near) { opacity: 0.2; }
-.graph-svg.has-focus .n.is-near circle { opacity: 1; }
+.graph-svg.has-focus .n.is-near .core { opacity: 1; }
 .graph-svg.has-focus .n.is-near text { fill: var(--text2); }
 .graph-svg.has-focus .e.is-near { opacity: 1; stroke: var(--accent); stroke-width: 2.5; }
-.graph-svg.has-focus .n.is-focus circle { fill: var(--accent); stroke: var(--accent); }
+.graph-svg.has-focus .n.is-focus .core { fill: var(--accent); stroke: var(--accent); stroke-dasharray: none; }
 .graph-svg.has-focus .n.is-focus text { fill: var(--text); font-weight: 700; }
 
 .graph-caption { font-size: 14px; color: var(--muted); margin: 12px 0 0; max-width: 40em; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: var(--muted); margin-top: 12px; padding: 0; list-style: none; }
-.legend li { display: inline-flex; align-items: center; gap: 8px; }
-.dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--node); background: var(--surface2); display: inline-block; }
-.dot-co { border-color: var(--text2); border-width: 2px; }
-.dot-tool { background: var(--skillfill); }
-.dot-ind { width: 12px; height: 12px; }
+.legend li { display: inline-flex; align-items: center; gap: 6px; cursor: default; }
+.key { width: 16px; height: 16px; overflow: visible; }
 
 /* ---------- Sections ---------- */
 #sections { display: flex; flex-direction: column; }
@@ -182,7 +181,7 @@ html.js .linkbtn { display: inline-flex; align-items: center; }
 .case-head h3 { margin: 0; font: inherit; }
 .case-title { display: block; font-stretch: 112%; font-weight: 700; font-size: 22px; line-height: 1.2; letter-spacing: -0.01em; }
 .case-meta { display: block; font-size: 14px; color: var(--muted); margin-top: 4px; }
-.case-res { font-size: 15px; font-weight: 600; color: var(--accent); text-align: right; }
+.case-res { font-size: 15px; font-weight: 600; color: var(--text); text-align: right; }
 .chev { width: 20px; height: 20px; stroke: var(--text2); transition: transform var(--dur) var(--ease); }
 .case[open] .chev { transform: rotate(180deg); }
 .case-body { border-top: 1px solid var(--line2); overflow: hidden; }
@@ -199,7 +198,7 @@ html.js .linkbtn { display: inline-flex; align-items: center; }
 .tb th, .tb td { text-align: left; padding: 14px 20px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.45; }
 .tb tr:last-child th, .tb tr:last-child td { border-bottom: 0; }
 .tb th { width: 84px; font-weight: 500; color: var(--muted); }
-.tb .res { color: var(--accent); font-weight: 600; }
+.tb .res { color: var(--text); font-weight: 600; }
 .aside { font-size: 16px; color: var(--text3); margin: 24px 0 0; scroll-margin-top: 16px; }
 
 /* ---------- Method ---------- */
@@ -235,7 +234,7 @@ html.js .mpanel:not(.is-active) { display: none; }
 .index .refs { color: var(--muted); }
 .index .refs a { color: var(--text3); text-decoration-color: var(--line3); }
 .index .refs a:hover { color: var(--accent); text-decoration-color: var(--accent); }
-.index .letter { font-family: var(--font-serif); font-weight: 400; font-size: 30px; color: var(--accent); margin: 20px 0 8px; break-after: avoid; }
+.index .letter { font-family: var(--font-serif); font-weight: 400; font-size: 30px; color: var(--text3); margin: 20px 0 8px; break-after: avoid; }
 .index .letter { margin-top: 0; }
 
 /* ---------- Repos ---------- */
