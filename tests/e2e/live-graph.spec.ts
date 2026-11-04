@@ -16,11 +16,11 @@ for (const width of [1440, 390]) {
       await page.goto('/');
       const svg = width > 700 ? desk : '[data-graph][data-layout="phone"]';
       const before = await box(page, svg);
-      const nodeBefore = await box(page, `${svg} [data-node="novigo"] circle:not(.halo)`);
+      const nodeBefore = await box(page, `${svg} [data-node="novigo"] .plate`);
       for (const name of ["I'm hiring", 'I need something built', "I'm an engineer", "I'm an engineer"]) {
         await page.getByRole('button', { name }).click();
         expect(await box(page, svg)).toEqual(before);
-        expect(await box(page, `${svg} [data-node="novigo"] circle:not(.halo)`)).toEqual(nodeBefore);
+        expect(await box(page, `${svg} [data-node="novigo"] .plate`)).toEqual(nodeBefore);
       }
     });
   });

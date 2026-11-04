@@ -11,10 +11,11 @@ test.use({ reducedMotion: 'reduce' });
 test('hiring lens lights companies and dims the rest', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: "I'm hiring" }).click();
-  await expect.poll(() => opacity(page, dot('novigo'))).toBe(1);
+  await expect.poll(() => opacity(page, `${node('novigo')} .logo`)).toBe(1);
   await expect.poll(() => opacity(page, dot('hos'))).toBeLessThan(0.5);
-  const fill = await page.locator(`${node('ey')} circle:not(.halo)`).evaluate((el) => getComputedStyle(el).fill);
-  expect(fill).toBe('rgb(242, 165, 65)');
+  await expect.poll(() => opacity(page, `${node('tigergraph')} .logo`)).toBeLessThan(0.5);
+  const ring = await page.locator(`${node('ey')} .plate`).evaluate((el) => getComputedStyle(el).stroke);
+  expect(ring).toBe('rgb(242, 165, 65)');
 });
 
 test('hovering a node lights it and its neighbours only', async ({ page }) => {

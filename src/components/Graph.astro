@@ -1,6 +1,8 @@
 ---
-import { LAYOUTS, NODE_RADIUS, graph, labelPlacement, linesFor, fontFor, ringsFrom } from '../data/graph';
+import { LAYOUTS, NODE_RADIUS, WORD_PAD, graph, labelPlacement, linesFor, fontFor, ringsFrom, wordLayout } from '../data/graph';
 import type { LayoutName } from '../data/graph';
+import { MARKS } from '../data/marks';
+import type { Mark, MarkId } from '../data/marks';
 
 const rings = ringsFrom();
 const byId = new Map(graph.nodes.map((n) => [n.id, n]));
@@ -8,7 +10,10 @@ const kindName = { company: 'company', work: 'project', domain: 'industry', skil
 const targetText = (t?: string) =>
   !t ? '' : t.startsWith('project:') ? ' Open the project.' : t.startsWith('job:') ? ' Go to experience.' : ' Show details.';
 const layouts: LayoutName[] = ['desktop', 'phone'];
-const legend = [['company', 'Company'], ['work', 'Project'], ['skill', 'Tool'], ['domain', 'Industry']] as const;
+// One mark, scaled into a box: a logo keeps its own colours, a line icon is stroked in the text colour.
+const draw = (id: MarkId, x: number, y: number, w: number, h: number, cls: string) => ({ m: MARKS[id] as Mark, x, y, w, h, cls });
+// Companies and tools are their logos; only the two kinds of circle need a key.
+const legend = [['work', 'Project'], ['domain', 'Industry']] as const;
 ---
 <figure class="graph-box">
   {layouts.map((layout) => (
@@ -54,11 +59,45 @@ const legend = [['company', 'Company'], ['work', 'Project'], ['skill', 'Tool'], 
             aria-label={`${n.label}, ${kindName[n.kind]}.${targetText(n.target)}`}
             style={`--d:${rings.get(n.id)}`}
           >
-            <circle class="halo" cx={p.x} cy={p.y} r={r + (layout === 'phone' ? 12 : 6)} />
-            <circle class="core" cx={p.x} cy={p.y} r={r} />
-            <text x={lp.x} y={lp.y} style={`text-anchor:${lp.anchor};font-size:${fs}px`}>
-              {linesFor(n, layout).map((line, i, lines) => <tspan x={lp.x} dy={i ? fs * 1.2 : 0}>{i < lines.length - 1 ? `${line} ` : line}</tspan>)}
-            </text>
+            {n.word ? (() => {
+              const wl = wordLayout(n, layout);
+              const left = p.x - wl.w / 2;
+              const marks = 'logo' in n.word
+                ? [draw(n.word.logo, left, p.y - wl.h / 2, wl.w, wl.h, 'logo')]
+                : n.word.icon ? [draw(n.word.icon, left, p.y - wl.icon / 2, wl.icon, wl.icon, (MARKS[n.word.icon] as Mark).line ? 'glyph line' : 'logo')] : [];
+              return (
+                <>
+                  <rect class="plate" x={left - WORD_PAD} y={p.y - wl.h / 2 - WORD_PAD} width={wl.w + WORD_PAD * 2} height={wl.h + WORD_PAD * 2} rx="6" />
+                  <g class="word">
+                    {marks.map(({ m, x, y, w, h, cls }) => (
+                      <svg class={cls} x={x} y={y} width={w} height={h} viewBox={m.viewBox} aria-hidden="true">
+                        {m.paths ? m.paths.map((path) => <path d={path.d} fill={path.fill} />) : <Fragment set:html={m.line} />}
+                      </svg>
+                    ))}
+                    {'text' in n.word && (
+                      <text x={left + wl.icon + wl.gap} y={p.y + wl.fs * 0.36} style={`text-anchor:start;font-size:${wl.fs}px;font-weight:800`}>{n.word.text}</text>
+                    )}
+                  </g>
+                </>
+              );
+            })() : (
+              <>
+                <circle class="halo" cx={p.x} cy={p.y} r={r + (layout === 'phone' ? 12 : 6)} />
+                <circle class="core" cx={p.x} cy={p.y} r={r} />
+                {n.mark && (() => {
+                  const m: Mark = MARKS[n.mark];
+                  const s = r * 1.15;
+                  return (
+                    <svg class="mark line" x={p.x - s / 2} y={p.y - s / 2} width={s} height={s} viewBox={m.viewBox} aria-hidden="true">
+                      <Fragment set:html={m.line} />
+                    </svg>
+                  );
+                })()}
+                <text x={lp.x} y={lp.y} style={`text-anchor:${lp.anchor};font-size:${fs}px`}>
+                  {linesFor(n, layout).map((line, i, lines) => <tspan x={lp.x} dy={i ? fs * 1.2 : 0}>{i < lines.length - 1 ? `${line} ` : line}</tspan>)}
+                </text>
+              </>
+            )}
           </g>
         );
       })}

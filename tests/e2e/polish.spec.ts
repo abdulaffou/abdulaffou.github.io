@@ -11,22 +11,46 @@ const look = (page: Page, sel: string) =>
 test.use({ reducedMotion: 'reduce' });
 
 test.describe('node kinds and legend', () => {
-  const kinds = { company: 'ey', work: 'clustering', skill: 'python', domain: 'logistics' } as const;
-
-  test('each node kind looks different, and the legend shows the same look', async ({ page }) => {
+  test('projects and industries look different, and the legend shows the same look', async ({ page }) => {
     await page.goto('/');
     const looks: string[] = [];
-    for (const [kind, id] of Object.entries(kinds)) {
+    for (const [kind, id] of [['work', 'clustering'], ['domain', 'logistics']]) {
       const node = await look(page, `${desk} [data-node="${id}"] .core`);
       expect(await look(page, `.legend .key.n-${kind} .core`), kind).toBe(node);
       looks.push(node);
     }
-    expect(new Set(looks).size).toBe(4);
+    expect(new Set(looks).size).toBe(2);
   });
 
-  test('a highlighted node is drawn at its own size, not its halo', async ({ page }) => {
+  test('companies and tools are drawn as their logos, not circles', async ({ page }) => {
+    await page.goto('/');
+    for (const id of ['novigo', 'ey', 'skill-quotient', 'freelance', 'tigergraph', 'python']) {
+      await expect(page.locator(`${desk} [data-node="${id}"] .word`), id).toHaveCount(1);
+      await expect(page.locator(`${desk} [data-node="${id}"] circle`), id).toHaveCount(0);
+    }
+  });
+
+  for (const layout of ['desktop', 'phone']) {
+    test(`every logo fits inside the plate that hides the lines beneath it (${layout})`, async ({ page }) => {
+      await page.setViewportSize(layout === 'phone' ? { width: 390, height: 844 } : { width: 1440, height: 900 });
+      await page.goto('/');
+      await page.evaluate(() => document.fonts.ready);
+      const spill = await page.locator(`[data-graph][data-layout="${layout}"] .word`).evaluateAll((words) =>
+        words.flatMap((w) => {
+          const plate = w.previousElementSibling!.getBoundingClientRect();
+          const b = w.getBoundingClientRect();
+          const id = (w.parentElement as HTMLElement).dataset.node;
+          return b.left < plate.left || b.right > plate.right || b.top < plate.top || b.bottom > plate.bottom ? [id] : [];
+        }),
+      );
+      expect(spill).toEqual([]);
+    });
+  }
+
+  test('a highlighted logo gets an amber outline and keeps its own colours', async ({ page }) => {
     await page.goto('/?for=hiring');
-    expect(await page.locator(`${desk} [data-node="ey"] .halo`).evaluate((el) => getComputedStyle(el).fill)).toBe('rgba(0, 0, 0, 0)');
+    expect(await page.locator(`${desk} [data-node="ey"] .plate`).evaluate((el) => getComputedStyle(el).stroke)).toBe(AMBER);
+    expect(await page.locator(`${desk} [data-node="ey"] .logo path`).last().evaluate((el) => getComputedStyle(el).fill)).toBe('rgb(255, 230, 0)');
   });
 });
 
@@ -47,10 +71,18 @@ test('every edge starts at the end nearer the hub, so highlights ripple outward'
   await page.goto('/');
   const bad = await page.locator(`${desk} .e-hi`).evaluateAll((lines) => {
     const ring = (el: Element) => Number((el as HTMLElement).style.getPropertyValue('--d'));
+    // A node's centre: its circle's, or the middle of its logo plate.
+    const centre = (g: Element) => {
+      const c = g.querySelector('.core');
+      if (c) return [Number(c.getAttribute('cx')), Number(c.getAttribute('cy'))];
+      const p = g.querySelector('.plate')!;
+      return [Number(p.getAttribute('x')) + Number(p.getAttribute('width')) / 2, Number(p.getAttribute('y')) + Number(p.getAttribute('height')) / 2];
+    };
     const nodeAt = (x: number, y: number) =>
-      [...document.querySelectorAll(`[data-graph][data-layout="desktop"] [data-node] .core`)].find(
-        (c) => Number(c.getAttribute('cx')) === x && Number(c.getAttribute('cy')) === y,
-      )!.parentElement!;
+      [...document.querySelectorAll(`[data-graph][data-layout="desktop"] [data-node]`)].find((g) => {
+        const [cx, cy] = centre(g);
+        return Math.abs(cx - x) < 0.01 && Math.abs(cy - y) < 0.01;
+      })!;
     return lines
       .filter((l) => ring(nodeAt(+l.getAttribute('x1')!, +l.getAttribute('y1')!)) > ring(nodeAt(+l.getAttribute('x2')!, +l.getAttribute('y2')!)))
       .map((l) => `${(l as SVGElement).dataset.from}>${(l as SVGElement).dataset.to}`);

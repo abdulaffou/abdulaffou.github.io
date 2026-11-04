@@ -105,27 +105,34 @@ html[data-lens="engineers"] [data-lens-copy="engineers"] {
   transition: stroke-dashoffset 380ms var(--ease) calc(var(--d, 0) * 30ms);
 }
 .n { cursor: pointer; outline: none; }
-/* One look per kind, shared by graph nodes and the legend: company solid ring, project hollow, tool filled, industry dashed. */
+/* Projects are hollow circles and industries dashed ones, with their icon inside; the legend shares these. */
 .core { fill: var(--bg); stroke: var(--node); stroke-width: 1.5; transition: fill var(--dur) var(--ease), stroke var(--dur) var(--ease), opacity var(--dur) var(--ease); }
-.n-company .core { fill: var(--surface2); stroke: var(--text2); stroke-width: 2; }
-.n-skill .core { fill: var(--line3); }
 .n-domain .core { stroke-dasharray: 3 2.5; }
+.n .mark { color: var(--text3); pointer-events: none; transition: color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+.line * { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Companies and tools are their own logos, on a plate that hides the lines running in beneath them. */
+.plate { fill: var(--bg); stroke: transparent; stroke-width: 1.5; transition: stroke var(--dur) var(--ease); }
+.word { color: var(--text); pointer-events: none; }
+.word :is(.logo, .glyph) { transition: opacity var(--dur) var(--ease); }
+.n .word text { fill: var(--text); font-stretch: 112%; letter-spacing: -0.01em; }
 .n text { fill: var(--text2); font-family: var(--font-sans); font-size: 13px; font-weight: 500; text-anchor: middle; transition: fill var(--dur) var(--ease); }
-.n-company text { font-weight: 700; font-size: 14px; fill: var(--text); }
 .n .halo { fill: transparent; stroke: none; }
-.n:focus-visible .halo { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 3 3; }
+.n:focus-visible :is(.halo, .plate) { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 3 3; }
 
 /* lens highlight (paints before JS) */
 /* dim shapes, not labels: labels drop to --muted so they keep 4.5:1 contrast */
-html[data-lens="hiring"] .n:not(.n-company) .core,
-html[data-lens="clients"] .n:not(.n-domain):not(.n-work) .core,
-html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) .core { opacity: 0.3; }
+html[data-lens="hiring"] .n:not(.n-company) :is(.core, .mark, .logo, .glyph),
+html[data-lens="clients"] .n:not(.n-domain):not(.n-work) :is(.core, .mark, .logo, .glyph),
+html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) :is(.core, .mark, .logo, .glyph) { opacity: 0.3; }
 html[data-lens="hiring"] .n:not(.n-company) text,
 html[data-lens="clients"] .n:not(.n-domain):not(.n-work) text,
 html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) text { fill: var(--muted); }
 html[data-lens="hiring"] .n-company .core,
 html[data-lens="clients"] :is(.n-domain, .n-work) .core,
 html[data-lens="engineers"] :is(.n-skill, .n-oss) .core { fill: var(--accent); stroke: var(--accent); stroke-dasharray: none; }
+html[data-lens="clients"] .n-domain .mark { color: var(--on-accent); }
+html[data-lens="hiring"] .n-company .plate,
+html[data-lens="engineers"] .n-skill .plate { stroke: var(--accent); }
 html[data-lens="hiring"] .e-hi.e-company,
 html[data-lens="clients"] .e-hi.e-work,
 html[data-lens="engineers"] .e-hi.e-oss {
@@ -134,14 +141,16 @@ html[data-lens="engineers"] .e-hi.e-oss {
 }
 
 /* hover / focus neighbourhood (set by graph.ts, wins over lens) */
-.graph-svg.has-focus .n:not(.is-near) .core { opacity: 0.25; }
+.graph-svg.has-focus .n:not(.is-near) :is(.core, .mark, .logo, .glyph) { opacity: 0.25; }
 .graph-svg.has-focus .n:not(.is-near) text { fill: var(--muted); }
 .graph-svg.has-focus .e:not(.is-near) { opacity: 0.15; }
 .graph-svg.has-focus .e-hi:not(.is-near) { opacity: 0.2; }
-.graph-svg.has-focus .n.is-near .core { opacity: 1; }
+.graph-svg.has-focus .n.is-near :is(.core, .mark, .logo, .glyph) { opacity: 1; }
 .graph-svg.has-focus .n.is-near text { fill: var(--text2); }
 .graph-svg.has-focus .e.is-near { opacity: 1; stroke: var(--accent); stroke-width: 2.5; }
 .graph-svg.has-focus .n.is-focus .core { fill: var(--accent); stroke: var(--accent); stroke-dasharray: none; }
+.graph-svg.has-focus .n.is-focus .mark { color: var(--on-accent); }
+.graph-svg.has-focus .n.is-focus .plate { stroke: var(--accent); }
 .graph-svg.has-focus .n.is-focus text { fill: var(--text); font-weight: 700; }
 
 .graph-caption { font-size: 14px; color: var(--muted); margin: 12px 0 0; max-width: 40em; }

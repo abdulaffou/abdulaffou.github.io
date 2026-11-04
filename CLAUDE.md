@@ -25,7 +25,7 @@ Read `CLAUDE.local.md` too if it exists: it holds private notes (sources, exclus
 - **No trackers or analytics**, no runtime requests to third parties (fonts are self-hosted via Fontsource).
 - **Accessibility:** WCAG 2.1 AA, keyboard operable, visible focus, everything respects `prefers-reduced-motion`.
 - **No visitor-facing placeholders.** Photos render only when set in `photos` in `content.ts`.
-- **Look:** graphite `#121417` (warm near-black, no blue) with amber `#F2A541` as the only colour, Archivo (wide for headlines), Newsreader only for the data letter and skills-index letters. No gradients, glass, emoji, skill bars or logo walls.
+- **Look:** graphite `#121417` (warm near-black, no blue) with amber `#F2A541` as the only interface colour, Archivo (wide for headlines), Newsreader only for the data letter and skills-index letters. In the graph, companies and tools are drawn as their own logos in brand colours (Abdul's choice); logos and icons live in `src/data/marks.ts`. Skill Quotient has no logo yet, so it is set as text. No gradients, glass, emoji, skill bars or logo walls outside the graph.
 - **Graph edits:** after moving nodes, `npm test` checks that no edge crosses a node or label and that labels never overlap.
 
 ## Pending (from Abdul)

@@ -148,8 +148,11 @@ describe('graph', () => {
       for (const e of graph.edges) {
         const a = pos(byId.get(e.from)!);
         const b = pos(byId.get(e.to)!);
-        for (const n of graph.nodes)
+        for (const n of graph.nodes) {
+          // A line runs into the logo it connects to; the logo's plate covers its end.
+          if (n.word && (n.id === e.from || n.id === e.to)) continue;
           expect(segHitsBox(a.x, a.y, b.x, b.y, labelBox(n, layout)), `${e.from}-${e.to} crosses ${n.id} label`).toBe(false);
+        }
       }
     });
   }

@@ -1,3 +1,5 @@
+import type { MarkId } from './marks';
+
 export type Lens = 'default' | 'hiring' | 'clients' | 'engineers';
 export type ActiveLens = Exclude<Lens, 'default'>;
 
@@ -102,14 +104,21 @@ export interface Pt {
   x: number;
   y: number;
   /** Where the label sits relative to the node. Defaults to below. */
-  label?: 'above' | 'below';
+  label?: 'above' | 'below' | 'left' | 'right';
 }
+
+/** A logo at a fixed height, or text set like one, with an optional icon before it. */
+export type Wordmark = { logo: MarkId; height: number } | { text: string; icon?: MarkId };
 
 export interface GNode {
   id: string;
   label: string;
   /** Optional line break for the phone layout. */
   phoneLines?: string[];
+  /** Icon drawn inside the node's circle. */
+  mark?: MarkId;
+  /** Companies and tools are drawn as their own logo, in place of the circle and label. */
+  word?: Wordmark;
   kind: NodeKind;
   desktop: Pt;
   phone: Pt;
