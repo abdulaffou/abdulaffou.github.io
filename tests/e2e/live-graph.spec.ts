@@ -55,7 +55,8 @@ test.describe('edges', () => {
 
 test('switching roles animates edges instead of cross-fading the page', async ({ page }) => {
   await page.goto('/');
-  await page.waitForTimeout(1800);
+  // Let the first-visit intro, sweep included, finish first.
+  await page.waitForFunction(() => !document.getAnimations().some((a) => a instanceof CSSAnimation), null, { timeout: 8000 });
   await page.getByRole('button', { name: "I'm hiring" }).click();
   const kinds = await page.evaluate(() => document.getAnimations().map((a) => (a as CSSTransition).transitionProperty ?? a.constructor.name));
   expect(kinds).toContain('stroke-dashoffset');
