@@ -72,3 +72,12 @@ document.addEventListener('click', (event) => {
 });
 
 syncLabel();
+
+// On phones a drawing scrolls sideways; only then does it need to take keyboard focus so arrow keys can scroll it.
+const fitFocus = new ResizeObserver((entries) => {
+  for (const { target } of entries) {
+    if (target.scrollWidth > target.clientWidth + 1) target.setAttribute('tabindex', '0');
+    else target.removeAttribute('tabindex');
+  }
+});
+document.querySelectorAll('.chain').forEach((chain) => fitFocus.observe(chain));

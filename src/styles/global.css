@@ -274,9 +274,12 @@ html.js .mpanel:not(.is-active) { display: none; }
 
 /* ---------- Phone ---------- */
 @media (max-width: 760px) {
-  .hero { padding: 16px 0 72px; gap: 40px; }
-  .switch { width: 100%; flex-direction: column; }
-  .tab { text-align: left; }
+  .hero { padding: 16px 0 32px; gap: 28px; }
+  h1 { margin: 28px 0 20px; }
+  .lede { font-size: 18px; margin-bottom: 24px; }
+  /* The switch is a one-row segmented control; long labels wrap inside their own segment. */
+  .switch { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; }
+  .tab { min-height: 52px; padding: 6px 4px; font-size: 14px; line-height: 1.2; text-align: center; }
   /* One sticky row: name, then links that scroll sideways under a fade. */
   body > header { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
   .nav { flex-wrap: nowrap; padding: 6px 0; gap: 16px; }
@@ -287,24 +290,32 @@ html.js .mpanel:not(.is-active) { display: none; }
   }
   .nav-links::-webkit-scrollbar { display: none; }
   .nav-links a { white-space: nowrap; }
-  #sections > section { padding: 64px 0; }
+  #sections > section { padding: 52px 0; }
+  #sections > section.contact { padding: 64px 0 48px; }
+  .sec-intro { margin-bottom: 28px; }
   .about { grid-template-columns: 1fr; }
   .job { grid-template-columns: 1fr; gap: 6px; }
-  .dwg { grid-template-columns: 1fr; }
-  .dwg .art { border-right: 0; border-bottom: 1px solid var(--line2); padding: 24px 16px; }
+  .dwg { grid-template-columns: minmax(0, 1fr); }
+  .dwg .art { min-width: 0; border-right: 0; border-bottom: 1px solid var(--line2); padding: 24px 16px; }
   .tb th, .tb td { padding: 12px 16px; }
   .case-head { grid-template-columns: minmax(0, 1fr) 24px; gap: 8px 16px; padding: 18px 16px; }
   .case-res { grid-column: 1; grid-row: 2; text-align: left; }
   .chev { grid-column: 2; grid-row: 1; }
   .case-title { font-size: 19px; }
-  /* Stacked, with vertical connectors: sideways ones dangle wherever a row wraps. */
-  .method, .chain { flex-direction: column; align-items: flex-start; }
-  .method li, .chain .step { flex-direction: column; align-items: flex-start; }
-  .method li + li::before { width: 2px; height: 14px; margin-left: 28px; }
-  .mstep { font-size: 17px; padding: 12px 18px; }
+  /* How I work: a four-step tab bar; left to right is the order. */
+  .method { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .method li + li::before { display: none; }
+  .mstep { width: 100%; min-height: 52px; padding: 6px 2px; font-size: clamp(12.5px, 3.6vw, 14px); font-stretch: 100%; line-height: 1.2; }
   .repo { padding: 24px; }
-  .chain .step + .step::before { width: 1.5px; height: 12px; margin-left: 22px; }
-  .chain .step.hot-edge::before { width: 2px; height: 12px; }
+  /* Drawings stay on one line and swipe sideways; the fade says there is more. */
+  .chain {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px;
+    mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent);
+  }
+  .chain::-webkit-scrollbar { display: none; }
+  .chain .step { flex: none; }
+  .chain .nd { white-space: nowrap; }
+  .chain .step + .step::before { width: 18px; }
 }
 
 /* ---------- Intro (first load only, set in <head>; CSS-only so content can never get stuck hidden) ---------- */

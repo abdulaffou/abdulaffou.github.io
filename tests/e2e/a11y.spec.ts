@@ -3,8 +3,9 @@ import { expect, test } from '@playwright/test';
 
 test.use({ reducedMotion: 'reduce' });
 
-for (const q of ['', '?for=hiring', '?for=clients', '?for=engineers']) {
-  test(`no serious accessibility violations ${q || '(default)'}`, async ({ page }) => {
+for (const [q, width] of [['', 1440], ['?for=hiring', 1440], ['?for=clients', 1440], ['?for=engineers', 1440], ['', 390], ['?for=clients', 390]] as const) {
+  test(`no serious accessibility violations ${q || '(default)'} at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
     await page.goto('/' + q);
     await page.locator('[data-expand-all]').click();
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();

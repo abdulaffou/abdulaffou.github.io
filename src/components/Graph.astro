@@ -57,7 +57,7 @@ const legend = [['company', 'Company'], ['work', 'Project'], ['skill', 'Tool'], 
             <circle class="halo" cx={p.x} cy={p.y} r={r + (layout === 'phone' ? 12 : 6)} />
             <circle class="core" cx={p.x} cy={p.y} r={r} />
             <text x={lp.x} y={lp.y} style={`text-anchor:${lp.anchor};font-size:${fs}px`}>
-              {linesFor(n, layout).map((line, i) => <tspan x={lp.x} dy={i ? fs * 1.2 : 0}>{line}</tspan>)}
+              {linesFor(n, layout).map((line, i, lines) => <tspan x={lp.x} dy={i ? fs * 1.2 : 0}>{i < lines.length - 1 ? `${line} ` : line}</tspan>)}
             </text>
           </g>
         );

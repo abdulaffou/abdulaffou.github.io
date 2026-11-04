@@ -154,6 +154,25 @@ describe('graph', () => {
     });
   }
 
+  it('the phone graph is no more tangled than the desktop one, and fits a phone screen', () => {
+    const crossings = (layout: 'desktop' | 'phone') => {
+      const at = (id: string) => graph.nodes.find((n) => n.id === id)![layout];
+      const side = (a: { x: number; y: number }, b: { x: number; y: number }, c: { x: number; y: number }) =>
+        (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+      let count = 0;
+      graph.edges.forEach((e, i) =>
+        graph.edges.slice(i + 1).forEach((f) => {
+          if ([e.from, e.to].some((id) => id === f.from || id === f.to)) return;
+          const [a, b, c, d] = [at(e.from), at(e.to), at(f.from), at(f.to)];
+          if (side(a, b, c) * side(a, b, d) < 0 && side(c, d, a) * side(c, d, b) < 0) count++;
+        }),
+      );
+      return count;
+    };
+    expect(crossings('phone')).toBeLessThanOrEqual(crossings('desktop'));
+    expect(LAYOUTS.phone.height).toBeLessThanOrEqual(600);
+  });
+
   it('every node is reachable from the TigerGraph hub', () => {
     expect(ringsFrom().size).toBe(graph.nodes.length);
   });
