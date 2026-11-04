@@ -18,24 +18,24 @@ export const NODE_RADIUS: Record<NodeKind, number> = {
 /** Hand-placed so the picture is the same on every load. Phone has its own layout with larger labels. */
 export const graph: { nodes: GNode[]; edges: GEdge[] } = {
   nodes: [
-    { id: 'novigo', label: 'Novigo', word: { logo: 'novigo', height: 18 }, kind: 'company', desktop: { x: 110, y: 250, label: 'left' }, phone: { x: 184, y: 83, label: 'above' }, target: 'job:novigo' },
-    { id: 'ey', label: 'EY', word: { logo: 'ey', height: 30 }, kind: 'company', desktop: { x: 300, y: 110, label: 'above' }, phone: { x: 84, y: 268, label: 'right' }, target: 'job:ey' },
-    { id: 'skill-quotient', label: 'Skill Quotient', word: { text: 'Skill Quotient' }, kind: 'company', desktop: { x: 495, y: 120 }, phone: { x: 92, y: 481, label: 'above' }, target: 'job:skill-quotient' },
-    { id: 'freelance', label: 'Freelance', word: { text: 'Freelance', icon: 'briefcase' }, kind: 'company', desktop: { x: 420, y: 370, label: 'left' }, phone: { x: 217, y: 316, label: 'right' }, target: 'job:freelance' },
-    { id: 'hos', label: 'HOS rule engine', kind: 'work', desktop: { x: 70, y: 140, label: 'right' }, phone: { x: 105, y: 44, label: 'above' }, target: 'project:hos-engine' },
-    { id: 'freight', label: 'Freight optimisation', phoneLines: ['Freight', 'optimisation'], kind: 'work', desktop: { x: 90, y: 390 }, phone: { x: 283, y: 63, label: 'above' }, target: 'aside' },
-    { id: 'control-tower', label: 'Control tower', kind: 'work', desktop: { x: 200, y: 40, label: 'above' }, phone: { x: 57, y: 171, label: 'above' }, target: 'project:control-tower' },
-    { id: 'attack-paths', label: 'Attack paths', kind: 'work', desktop: { x: 590, y: 210 }, phone: { x: 134, y: 561, label: 'right' }, target: 'project:attack-paths' },
-    { id: 'clustering', label: 'Lane clustering', kind: 'work', desktop: { x: 290, y: 450 }, phone: { x: 295, y: 223, label: 'above' }, target: 'project:clustering' },
-    { id: 'agent', label: 'Network agent', phoneLines: ['Network', 'agent'], kind: 'work', desktop: { x: 450, y: 430 }, phone: { x: 282, y: 399, label: 'right' }, target: 'project:copilot-agent' },
-    { id: 'fabric', label: 'Fabric migration', kind: 'work', desktop: { x: 580, y: 420 }, phone: { x: 290, y: 451 }, target: 'project:fabric-migration' },
-    { id: 'logistics', label: 'Logistics', mark: 'truck', kind: 'domain', desktop: { x: 220, y: 300, label: 'left' }, phone: { x: 215, y: 208 } },
-    { id: 'cyber', label: 'Cybersecurity', mark: 'shield', kind: 'domain', desktop: { x: 560, y: 40, label: 'above' }, phone: { x: 74, y: 585, label: 'right' } },
-    { id: 'automotive', label: 'Automotive', mark: 'car', kind: 'domain', desktop: { x: 90, y: 40, label: 'above' }, phone: { x: 44, y: 64 } },
-    { id: 'tigergraph', label: 'TigerGraph', word: { logo: 'tigergraph', height: 22 }, kind: 'skill', desktop: { x: 330, y: 240 }, phone: { x: 136, y: 363, label: 'right' } },
-    { id: 'python', label: 'Python', word: { text: 'Python', icon: 'python' }, kind: 'skill', desktop: { x: 480, y: 270, label: 'above' }, phone: { x: 189, y: 435, label: 'above' } },
-    { id: 'splitbot', label: 'SplitBot', kind: 'oss', desktop: { x: 600, y: 300 }, phone: { x: 190, y: 534, label: 'right' }, target: 'section:code' },
-    { id: 'lego', label: 'LEGO tracker', kind: 'oss', desktop: { x: 540, y: 345 }, phone: { x: 237, y: 510, label: 'right' }, target: 'section:code' },
+    { id: 'novigo', label: 'Novigo', word: { logo: 'novigo', height: 21 }, kind: 'company', desktop: { x: 110, y: 250, label: 'left' }, phone: { x: 178, y: 99 }, target: 'job:novigo' },
+    { id: 'ey', label: 'EY', word: { logo: 'ey', height: 28 }, kind: 'company', desktop: { x: 300, y: 110, label: 'above' }, phone: { x: 70, y: 234 }, target: 'job:ey' },
+    { id: 'skill-quotient', label: 'Skill Quotient', word: { text: 'Skill Quotient' }, kind: 'company', desktop: { x: 495, y: 120 }, phone: { x: 80, y: 380 }, target: 'job:skill-quotient' },
+    { id: 'freelance', label: 'Freelance', word: { text: 'Freelance', icon: 'briefcase' }, kind: 'company', desktop: { x: 420, y: 370, label: 'left' }, phone: { x: 256, y: 361 }, target: 'job:freelance' },
+    { id: 'hos', label: 'HOS rule engine', kind: 'work', desktop: { x: 70, y: 140, label: 'right' }, phone: { x: 70, y: 47, label: 'above' }, target: 'project:hos-engine' },
+    { id: 'freight', label: 'Freight optimisation', phoneLines: ['Freight', 'optimisation'], kind: 'work', desktop: { x: 90, y: 390 }, phone: { x: 291, y: 59, label: 'above' }, target: 'aside' },
+    { id: 'control-tower', label: 'Control tower', kind: 'work', desktop: { x: 200, y: 40, label: 'above' }, phone: { x: 137, y: 166, label: 'left' }, target: 'project:control-tower' },
+    { id: 'attack-paths', label: 'Attack paths', kind: 'work', desktop: { x: 590, y: 210 }, phone: { x: 38, y: 460, label: 'right' }, target: 'project:attack-paths' },
+    { id: 'clustering', label: 'Lane clustering', kind: 'work', desktop: { x: 290, y: 450 }, phone: { x: 320, y: 271, label: 'left' }, target: 'project:clustering' },
+    { id: 'agent', label: 'Network agent', phoneLines: ['Network', 'agent'], kind: 'work', desktop: { x: 450, y: 430 }, phone: { x: 349, y: 408, label: 'left' }, target: 'project:copilot-agent' },
+    { id: 'fabric', label: 'Fabric migration', kind: 'work', desktop: { x: 580, y: 420 }, phone: { x: 289, y: 519 }, target: 'project:fabric-migration' },
+    { id: 'logistics', label: 'Logistics', mark: 'truck', kind: 'domain', desktop: { x: 220, y: 300, label: 'left' }, phone: { x: 261, y: 175, label: 'right' } },
+    { id: 'cyber', label: 'Cybersecurity', mark: 'shield', kind: 'domain', desktop: { x: 560, y: 40, label: 'above' }, phone: { x: 69, y: 544 } },
+    { id: 'automotive', label: 'Automotive', mark: 'car', kind: 'domain', desktop: { x: 90, y: 40, label: 'above' }, phone: { x: 46, y: 111 } },
+    { id: 'tigergraph', label: 'TigerGraph', word: { logo: 'tigergraph', height: 21 }, kind: 'skill', desktop: { x: 330, y: 240 }, phone: { x: 163, y: 309 } },
+    { id: 'python', label: 'Python', word: { text: 'Python', icon: 'python' }, kind: 'skill', desktop: { x: 480, y: 270, label: 'above' }, phone: { x: 188, y: 424 } },
+    { id: 'splitbot', label: 'SplitBot', kind: 'oss', desktop: { x: 600, y: 300 }, phone: { x: 149, y: 519 }, target: 'section:code' },
+    { id: 'lego', label: 'LEGO tracker', kind: 'oss', desktop: { x: 540, y: 345 }, phone: { x: 219, y: 490 }, target: 'section:code' },
   ],
   edges: [
     { from: 'novigo', to: 'tigergraph', classes: ['company'] },
@@ -76,8 +76,9 @@ export const WORD_TEXT_EM: Record<string, number> = { 'Skill Quotient': 7.35, Fr
 /** Space between a wordmark and the edge of the plate that hides the lines beneath it. */
 export const WORD_PAD = 5;
 
-export function wordFont(layout: LayoutName): number {
-  return LAYOUTS[layout].companyFont + 1;
+/** Text wordmarks match the logos' visual weight, the same size on both layouts. */
+export function wordFont(_layout: LayoutName): number {
+  return 15;
 }
 
 /** Width and height of a node's wordmark, and where its icon and text sit, centred on the node. */

@@ -13,7 +13,8 @@ test('hiring lens lights companies and dims the rest', async ({ page }) => {
   await page.getByRole('button', { name: "I'm hiring" }).click();
   await expect.poll(() => opacity(page, `${node('novigo')} .logo`)).toBe(1);
   await expect.poll(() => opacity(page, dot('hos'))).toBeLessThan(0.5);
-  await expect.poll(() => opacity(page, `${node('tigergraph')} .logo`)).toBeLessThan(0.5);
+  await expect.poll(() => opacity(page, `${node('tigergraph')} .logo`)).toBeLessThan(1);
+  expect(await page.locator(`${node('tigergraph')} .logo`).evaluate((el) => getComputedStyle(el).filter)).toBe('grayscale(1)');
   const ring = await page.locator(`${node('ey')} .plate`).evaluate((el) => getComputedStyle(el).stroke);
   expect(ring).toBe('rgb(242, 165, 65)');
 });

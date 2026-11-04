@@ -113,7 +113,12 @@ html[data-lens="engineers"] [data-lens-copy="engineers"] {
 /* Companies and tools are their own logos, on a plate that hides the lines running in beneath them. */
 .plate { fill: var(--bg); stroke: transparent; stroke-width: 1.5; transition: stroke var(--dur) var(--ease); }
 .word { color: var(--text); pointer-events: none; }
-.word :is(.logo, .glyph) { transition: opacity var(--dur) var(--ease); }
+.word :is(.logo, .glyph) { transition: opacity var(--dur) var(--ease), filter var(--dur) var(--ease); }
+/* A dimmed logo turns grey rather than a muddy shade of its brand colour. */
+html[data-lens="hiring"] .n:not(.n-company) .logo,
+html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) .logo,
+html[data-lens="clients"] .n .logo,
+.graph-svg.has-focus .n:not(.is-near) .logo { filter: grayscale(1); opacity: 0.5; }
 .n .word text { fill: var(--text); font-stretch: 112%; letter-spacing: -0.01em; }
 .n text { fill: var(--text2); font-family: var(--font-sans); font-size: 13px; font-weight: 500; text-anchor: middle; transition: fill var(--dur) var(--ease); }
 .n .halo { fill: transparent; stroke: none; }
@@ -121,9 +126,9 @@ html[data-lens="engineers"] [data-lens-copy="engineers"] {
 
 /* lens highlight (paints before JS) */
 /* dim shapes, not labels: labels drop to --muted so they keep 4.5:1 contrast */
-html[data-lens="hiring"] .n:not(.n-company) :is(.core, .mark, .logo, .glyph),
-html[data-lens="clients"] .n:not(.n-domain):not(.n-work) :is(.core, .mark, .logo, .glyph),
-html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) :is(.core, .mark, .logo, .glyph) { opacity: 0.3; }
+html[data-lens="hiring"] .n:not(.n-company) :is(.core, .mark, .glyph),
+html[data-lens="clients"] .n:not(.n-domain):not(.n-work) :is(.core, .mark, .glyph),
+html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) :is(.core, .mark, .glyph) { opacity: 0.3; }
 html[data-lens="hiring"] .n:not(.n-company) text,
 html[data-lens="clients"] .n:not(.n-domain):not(.n-work) text,
 html[data-lens="engineers"] .n:not(.n-skill):not(.n-oss) text { fill: var(--muted); }
@@ -141,11 +146,12 @@ html[data-lens="engineers"] .e-hi.e-oss {
 }
 
 /* hover / focus neighbourhood (set by graph.ts, wins over lens) */
-.graph-svg.has-focus .n:not(.is-near) :is(.core, .mark, .logo, .glyph) { opacity: 0.25; }
+.graph-svg.has-focus .n:not(.is-near) :is(.core, .mark, .glyph) { opacity: 0.25; }
 .graph-svg.has-focus .n:not(.is-near) text { fill: var(--muted); }
 .graph-svg.has-focus .e:not(.is-near) { opacity: 0.15; }
 .graph-svg.has-focus .e-hi:not(.is-near) { opacity: 0.2; }
-.graph-svg.has-focus .n.is-near :is(.core, .mark, .logo, .glyph) { opacity: 1; }
+.graph-svg.has-focus .n.is-near :is(.core, .mark, .glyph) { opacity: 1; }
+.graph-svg.has-focus .n.is-near .logo { filter: none; opacity: 1; }
 .graph-svg.has-focus .n.is-near text { fill: var(--text2); }
 .graph-svg.has-focus .e.is-near { opacity: 1; stroke: var(--accent); stroke-width: 2.5; }
 .graph-svg.has-focus .n.is-focus .core { fill: var(--accent); stroke: var(--accent); stroke-dasharray: none; }
